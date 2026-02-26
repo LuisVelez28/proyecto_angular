@@ -1,7 +1,52 @@
-<div class="row">
-  @for (destino of destinos; track destino) {
-    <div class="col-md-4 mb-3">
-      <app-destino-viaje [nombre]="destino"></app-destino-viaje>
+<div class="container content">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <span class="anchor" id="formLogin"></span>
+      <!-- form card login with validation feedback -->
+      <div class="card card-outline-secondary">
+        <div class="card-header">
+          <h3 class="mb-0">Wishlist</h3>
+        </div>
+        <div class="card-body">
+          <form>
+            <div class="form-group">
+              <label for="nombre">Nombre</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nombre"
+                #nombre
+                placeholder="Ingresar nombre..."
+              />
+            </div>
+            <div class="form-group">
+              <label for="imagenUrl">Imagen Url</label>
+              <input
+                type="text"
+                class="form-control"
+                id="imagenUrl"
+                #url
+                placeholder="Ingresar url..."
+              />
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="guardar(nombre.value, url.value)"
+            >
+              Guardar!
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
-  }
+  </div>
+  <hr class="mb-5" />
+  <div class="row">
+    <ul>
+      <li *ngFor="let destino of destinos">
+        <app-destino-viaje [destino]="destino"></app-destino-viaje>
+      </li>
+    </ul>
+  </div>
 </div>

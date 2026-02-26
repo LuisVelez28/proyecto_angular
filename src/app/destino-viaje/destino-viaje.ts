@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, HostBinding } from '@angular/core';
+import { DestinoViaje as DestinoViajeModel } from './../models/destino-viaje.models';
 
 @Component({
   selector: 'app-destino-viaje',
@@ -6,7 +7,7 @@ import { Component, Input } from '@angular/core';
   templateUrl: './destino-viaje.html',
   styleUrl: './destino-viaje.scss',
 })
-export class DestinoViaje {
-  @Input() nombre: string = '';
-
+export class DestinoViajeComponent {
+  @Input() destino: DestinoViajeModel | undefined;
+  @HostBinding('class') clase: string = 'col-md-4';
 }

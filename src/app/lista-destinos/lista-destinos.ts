@@ -1,16 +1,24 @@
 import { Component } from '@angular/core';
-import { DestinoViaje } from '../destino-viaje/destino-viaje';
+import { CommonModule } from '@angular/common';
+import { DestinoViaje } from './../models/destino-viaje.models';
+import { DestinoViajeComponent } from '../destino-viaje/destino-viaje';
 
 @Component({
   selector: 'app-lista-destinos',
-  imports: [DestinoViaje],
+  imports: [CommonModule, DestinoViajeComponent],
   templateUrl: './lista-destinos.html',
   styleUrl: './lista-destinos.scss',
 })
 export class ListaDestinos {
-  destinos: string[];
+  destinos: DestinoViaje[];
 
   constructor() {
-    this.destinos = ['Manizales', 'Bogota', 'Cali', 'Medellin', 'Cartagena'];
+    this.destinos = [];
+  }
+
+  guardar(nombre: string, url: string): boolean {
+    this.destinos.push(new DestinoViaje(nombre, url));
+    console.log(this.destinos);
+    return false;
   }
 }

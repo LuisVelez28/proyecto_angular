@@ -1,7 +1,11 @@
-<div class="card">
-  <div class="card-body">
-    <h5 class="card-title">{{ nombre }}</h5>
-    <p class="card-text">Destino turístico</p>
-    <button class="btn btn-primary">Ver detalles</button>
+<div class="card-content">
+  <div class="card-img">
+    <img [src]="destino?.imagenUrl" alt="{{ destino?.nombre }}" />
+    <span><h4>{{ destino?.nombre }}</h4></span>
+  </div>
+  <div class="card-desc">
+    <h3>{{ destino?.nombre }}</h3>
+    <p>Destino turístico recomendado para disfrutar de experiencias inolvidables.</p>
+    <a href="#" class="btn-card">Leer más</a>
   </div>
 </div>
