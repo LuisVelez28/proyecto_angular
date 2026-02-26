@@ -6,6 +6,7 @@
   <div class="card-desc">
     <h3>{{ destino?.nombre }}</h3>
     <p>Destino turístico recomendado para disfrutar de experiencias inolvidables.</p>
-    <a href="#" class="btn-card">Leer más</a>
+    <a href="#" class="btn-card" (click)="ir()">Ir</a>
+    <span [style.display]="destino?.isSelected() ? '' : 'none'">PREFERIDO</span>
   </div>
 </div>

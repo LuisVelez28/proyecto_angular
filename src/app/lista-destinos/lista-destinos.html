@@ -42,11 +42,11 @@
     </div>
   </div>
   <hr class="mb-5" />
-  <div class="row">
-    <ul>
-      <li *ngFor="let destino of destinos">
-        <app-destino-viaje [destino]="destino"></app-destino-viaje>
-      </li>
-    </ul>
-  </div>
+  <div class="row row-flex">
+      <app-destino-viaje
+        *ngFor="let destino of destinos"
+        [destino]="destino"
+        (clicked)="elegido($event)">
+      </app-destino-viaje>
+      </div>
 </div>
