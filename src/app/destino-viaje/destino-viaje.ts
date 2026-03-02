@@ -3,12 +3,12 @@ import { DestinoViaje as DestinoViajeModel } from './../models/destino-viaje.mod
 
 @Component({
   selector: 'app-destino-viaje',
-  imports: [],
   templateUrl: './destino-viaje.html',
   styleUrl: './destino-viaje.scss',
 })
 export class DestinoViajeComponent {
   @Input() destino: DestinoViajeModel | undefined;
+  @Input('idx') position: number | undefined;
   @HostBinding('class') clase: string = 'col-md-4';
   @Output() clicked: EventEmitter<DestinoViajeModel>;
 

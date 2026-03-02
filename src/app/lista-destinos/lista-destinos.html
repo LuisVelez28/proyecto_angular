@@ -43,10 +43,12 @@
   </div>
   <hr class="mb-5" />
   <div class="row row-flex">
+    @for (destino of destinos; track destino) {
       <app-destino-viaje
-        *ngFor="let destino of destinos"
         [destino]="destino"
+        [idx]="destinos.indexOf(destino) + 1"
         (clicked)="elegido($event)">
       </app-destino-viaje>
-      </div>
+    }
+  </div>
 </div>

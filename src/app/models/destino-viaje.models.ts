@@ -1,6 +1,9 @@
 export class DestinoViaje {
   private selected: boolean = false;
-  constructor(public nombre: string, public imagenUrl: string) {  }
+  public servicios: string[];
+  constructor(public nombre: string, public imagenUrl: string) {
+    this.servicios = ['pasajes', 'alojamiento', 'traslados', 'tours'];
+    }
   isSelected(): boolean {
     return this.selected;
   }
