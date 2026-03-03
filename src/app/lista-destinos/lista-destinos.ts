@@ -1,7 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DestinoViaje } from './../models/destino-viaje.models';
+import { DestinoViaje } from '../models/destino-viaje.model';
 import { DestinoViajeComponent } from '../destino-viaje/destino-viaje';
+import { DestinoViajeApiClient } from '../models/destino-api-client.model';
 import { FormDestinoViaje } from '../form-destino-viaje/form-destino-viaje';
 
 @Component({
@@ -13,22 +14,31 @@ import { FormDestinoViaje } from '../form-destino-viaje/form-destino-viaje';
 })
 export class ListaDestinos implements OnInit {
   @Output() onItemAdded: EventEmitter<DestinoViaje>;
+  updates: String[] = [];
   destinos: DestinoViaje[] = [];
 
-  constructor() {
+  constructor(@Inject(DestinoViajeApiClient) private destinosApiClient: DestinoViajeApiClient) {
     this.onItemAdded = new EventEmitter();
+    this.updates = [];
+    this.destinosApiClient.subscribeOnChange((d: DestinoViaje) => {
+      if (d != null) {
+        this.updates.push('Se ha elegido a ' + d.nombre);
+      }
+    });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.destinos = this.destinosApiClient.getAll();
+  }
 
   agregado(d: DestinoViaje): boolean {
-    this.destinos.push(d);
+    this.destinosApiClient.add(d);
+    this.destinos = this.destinosApiClient.getAll();
     this.onItemAdded.emit(d);
     return false;
   }
 
-  elegido(destino: DestinoViaje) {
-    this.destinos.forEach(function (x) { x.setSelected(false); });
-    destino.setSelected(true);
+  elegido(e: DestinoViaje) {
+    this.destinosApiClient.elegir(e);
   }
 }

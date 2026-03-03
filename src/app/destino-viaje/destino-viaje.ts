@@ -1,5 +1,5 @@
 import { Component, Input, HostBinding, EventEmitter, Output } from '@angular/core';
-import { DestinoViaje as DestinoViajeModel } from './../models/destino-viaje.models';
+import { DestinoViaje as DestinoViajeModel } from '../models/destino-viaje.model';
 import { RouterLink } from "@angular/router";
 
 @Component({

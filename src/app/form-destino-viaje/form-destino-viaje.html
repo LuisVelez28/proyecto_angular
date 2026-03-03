@@ -3,6 +3,11 @@
 		<label for="nombre" class="form-label">Nombre</label>
     <input id="nombre" type="text" class="form-control" formControlName="nombre"
           [class.is-invalid]="form.get('nombre')?.invalid && form.get('nombre')?.touched" />
+      <ul>
+        @for (r of searchResults; track $index) {
+          <li>{{ r }}</li>
+        }
+      </ul>
     @if (form.get('nombre')?.hasError('required') && form.get('nombre')?.touched) {
       <div class="text-danger small mt-1">El nombre es requerido.</div>
     }
