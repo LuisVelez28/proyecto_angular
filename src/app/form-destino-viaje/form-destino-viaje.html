@@ -1,13 +1,29 @@
 <form [formGroup]="form" (ngSubmit)="guardar()">
 	<div class="mb-3">
 		<label for="nombre" class="form-label">Nombre</label>
-		<input id="nombre" type="text" class="form-control" formControlName="nombre" />
-	</div>
+    <input id="nombre" type="text" class="form-control" formControlName="nombre"
+          [class.is-invalid]="form.get('nombre')?.invalid && form.get('nombre')?.touched" />
+    @if (form.get('nombre')?.hasError('required') && form.get('nombre')?.touched) {
+      <div class="text-danger small mt-1">El nombre es requerido.</div>
+    }
+    @if (form.get('nombre')?.hasError('minLength') && form.get('nombre')?.touched) {
+      <div class="text-danger small mt-1">El nombre debe tener al menos 3 caracteres.</div>
+    }
+  </div>
 
-	<div class="mb-3">
-		<label for="imagenUrl" class="form-label">Imagen URL</label>
-		<input id="imagenUrl" type="text" class="form-control" formControlName="imagenUrl" />
-	</div>
+  <div class="mb-3">
+    <label for="imagenUrl" class="form-label">Imagen URL</label>
+    <input id="imagenUrl" type="text" class="form-control" formControlName="imagenUrl"
+          [class.is-invalid]="form.get('imagenUrl')?.invalid && form.get('imagenUrl')?.touched" />
+    @if (form.get('imagenUrl')?.hasError('required') && form.get('imagenUrl')?.touched) {
+      <div class="text-danger small mt-1">La URL de la imagen es requerida.</div>
+    }
+    @if (form.get('imagenUrl')?.hasError('invalidUrl') && form.get('imagenUrl')?.touched) {
+      <div class="text-danger small mt-1">La URL debe comenzar con http:// o https://</div>
+    }
+  </div>
 
-	<button class="btn btn-primary" type="submit">Agregar</button>
+  @if (form.valid) {
+    <button class="btn btn-primary" type="submit">Agregar</button>
+  }
 </form>

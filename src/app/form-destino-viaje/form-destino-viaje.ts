@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DestinoViaje } from '../models/destino-viaje.models';
 
@@ -17,9 +17,36 @@ export class FormDestinoViaje {
   constructor(private fb: FormBuilder) {
     this.onItemAdded = new EventEmitter<DestinoViaje>();
     this.form = this.fb.group({
-      nombre: ['', [Validators.required]],
-      imagenUrl: ['', [Validators.required]],
+      nombre: ['', Validators.compose([
+        Validators.required,
+        this.minLengthValidator(3)
+      ])],
+      imagenUrl: ['', Validators.compose([
+        Validators.required,
+        this.urlValidator()
+      ])],
     });
+  }
+
+  // Validador personalizado: mínimo de caracteres
+  minLengthValidator(minLength: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) {
+        return null; // Si está vacío, lo maneja 'required'
+      }
+      return control.value.length >= minLength ? null : { minLength: { requiredLength: minLength, actualLength: control.value.length } };
+    };
+  }
+
+  // Validador personalizado: formato URL válido
+  urlValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) {
+        return null; // Si está vacío, lo maneja 'required'
+      }
+      const urlPattern = /^(http|https):\/\//;
+      return urlPattern.test(control.value) ? null : { invalidUrl: true };
+    };
   }
 
   guardar(): void {
