@@ -1,10 +1,12 @@
 import { Component, Input, HostBinding, EventEmitter, Output } from '@angular/core';
 import { DestinoViaje as DestinoViajeModel } from './../models/destino-viaje.models';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-destino-viaje',
   templateUrl: './destino-viaje.html',
   styleUrl: './destino-viaje.scss',
+  imports: [RouterLink],
 })
 export class DestinoViajeComponent {
   @Input() destino: DestinoViajeModel | undefined;

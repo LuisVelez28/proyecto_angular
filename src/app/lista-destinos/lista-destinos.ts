@@ -1,24 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DestinoViaje } from './../models/destino-viaje.models';
 import { DestinoViajeComponent } from '../destino-viaje/destino-viaje';
+import { FormDestinoViaje } from '../form-destino-viaje/form-destino-viaje';
 
 @Component({
   selector: 'app-lista-destinos',
-  imports: [CommonModule, DestinoViajeComponent],
+  standalone: true,
+  imports: [CommonModule, DestinoViajeComponent, FormDestinoViaje],
   templateUrl: './lista-destinos.html',
   styleUrl: './lista-destinos.scss',
 })
-export class ListaDestinos {
-  destinos: DestinoViaje[];
+export class ListaDestinos implements OnInit {
+  @Output() onItemAdded: EventEmitter<DestinoViaje>;
+  destinos: DestinoViaje[] = [];
 
   constructor() {
-    this.destinos = [];
+    this.onItemAdded = new EventEmitter();
   }
 
-  guardar(nombre: string, url: string): boolean {
-    this.destinos.push(new DestinoViaje(nombre, url));
-    console.log(this.destinos);
+  ngOnInit(): void {}
+
+  agregado(d: DestinoViaje): boolean {
+    this.destinos.push(d);
+    this.onItemAdded.emit(d);
     return false;
   }
 

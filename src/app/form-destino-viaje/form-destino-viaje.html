@@ -1,0 +1,13 @@
+<form [formGroup]="form" (ngSubmit)="guardar()">
+	<div class="mb-3">
+		<label for="nombre" class="form-label">Nombre</label>
+		<input id="nombre" type="text" class="form-control" formControlName="nombre" />
+	</div>
+
+	<div class="mb-3">
+		<label for="imagenUrl" class="form-label">Imagen URL</label>
+		<input id="imagenUrl" type="text" class="form-control" formControlName="imagenUrl" />
+	</div>
+
+	<button class="btn btn-primary" type="submit">Agregar</button>
+</form>
