@@ -22,6 +22,15 @@
         </li>
       }
     </ul>
+    <div class="vote-section">
+      <div class="vote-counter">
+        <span class="vote-badge">{{ destino?.votos || 0 }}</span>
+      </div>
+      <div class="vote-buttons">
+        <a href="#" class="vote-btn up" title="A favor" (click)="voteUp()"><i class="material-icons md-18">thumb_up</i></a>
+        <a href="#" class="vote-btn down" title="En contra" (click)="voteDown()"><i class="material-icons md-18">thumb_down</i></a>
+      </div>
+    </div>
     <a href="#" class="btn-card" (click)="ir($event)">Ir</a>
     @if (isSelected) {
       <span ngNonBindable>{{PREFERIDO}}</span>

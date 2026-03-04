@@ -1,12 +1,17 @@
-import { Component, Input, HostBinding, EventEmitter, Output } from '@angular/core';
+import { Component, Input, HostBinding, EventEmitter, Output, Inject } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { CommonModule } from '@angular/common';
 import { DestinoViaje as DestinoViajeModel } from '../models/destino-viaje.model';
 import { RouterLink } from "@angular/router";
+import { AppState } from '../app';
+import { VotoArribaAction, VotoAbajoAction } from '../models/destinos-viajes-state.model';
 
 @Component({
   selector: 'app-destino-viaje',
   templateUrl: './destino-viaje.html',
   styleUrl: './destino-viaje.scss',
-  imports: [RouterLink],
+  imports: [RouterLink, CommonModule],
+  standalone: true
 })
 export class DestinoViajeComponent {
   @Input() destino: DestinoViajeModel | undefined;
@@ -15,7 +20,7 @@ export class DestinoViajeComponent {
   @HostBinding('class') clase: string = 'd-block h-100';
   @Output() clicked: EventEmitter<DestinoViajeModel>;
 
-  constructor() {
+  constructor(private store: Store<AppState>) {
     this.clicked = new EventEmitter();
   }
 
@@ -25,5 +30,19 @@ export class DestinoViajeComponent {
       this.clicked.emit(this.destino);
     }
     return false;
-}
+  }
+
+  voteUp() {
+    if (this.destino) {
+      this.store.dispatch(new VotoArribaAction(this.destino));
+    }
+    return false;
+  }
+
+  voteDown() {
+    if (this.destino) {
+      this.store.dispatch(new VotoAbajoAction(this.destino));
+    }
+    return false;
+  }
 }

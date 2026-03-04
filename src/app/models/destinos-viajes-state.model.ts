@@ -1,4 +1,7 @@
 import { Action } from '@ngrx/store';
+import { Injectable, inject } from '@angular/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { tap } from 'rxjs/operators';
 import { DestinoViaje } from './destino-viaje.model';
 
 // Estado
@@ -21,6 +24,9 @@ export enum DestinosViajesActionTypes {  // Enum que define los tipos de accione
   NUEVO_DESTINO = '[Destinos Viajes] Nuevo Destino',  // Acción para agregar un nuevo destino de viaje
   BORRAR_DESTINO = '[Destinos Viajes] Borrar Destino',  // Acción para borrar un destino de viaje
   ELEGIDO_FAVORITO = '[Destinos Viajes] Elegido Favorito',  // Acción para seleccionar un destino de viaje como favorito
+  VOTO_ARRIBA = '[Destinos Viajes] Voto Arriba',  // Acción para incrementar votos de un destino
+  VOTO_ABAJO = '[Destinos Viajes] Voto Abajo',  // Acción para decrementar votos de un destino
+  RESET_VOTOS = '[Destinos Viajes] Reset Votos',  // Acción para reiniciar todos los votos a 0
 };
 
 export class NuevoDestinoAction implements Action {  // Clase que representa la acción de agregar un nuevo destino de viaje
@@ -35,10 +41,24 @@ export class ElegidoFavoritoAction implements Action {  // Clase que representa 
 
 export class BorrarDestinoAction implements Action {  // Clase que representa la acción de borrar un destino de viaje
   type = DestinosViajesActionTypes.BORRAR_DESTINO;  // Tipo de acción
-  constructor(public destino: DestinoViaje) {}  // Constructor que recibe el destino de viaje a borrar
+  constructor(public destino: DestinoViaje) {}  // Constructor que recibe el destino a borrar
 };
 
-export type DestinosViajesActions = NuevoDestinoAction | ElegidoFavoritoAction | BorrarDestinoAction;  // Tipo que agrupa todas las acciones de destinos de viaje
+export class VotoArribaAction implements Action {
+  type = DestinosViajesActionTypes.VOTO_ARRIBA;
+  constructor(public destino: DestinoViaje) {}
+};
+
+export class VotoAbajoAction implements Action {
+  type = DestinosViajesActionTypes.VOTO_ABAJO;
+  constructor(public destino: DestinoViaje) {}
+};
+
+export class ResetVotosAction implements Action {
+  type = DestinosViajesActionTypes.RESET_VOTOS;
+};
+
+export type DestinosViajesActions = NuevoDestinoAction | ElegidoFavoritoAction | BorrarDestinoAction | VotoArribaAction | VotoAbajoAction | ResetVotosAction;
 
 // Reducer
 
@@ -50,7 +70,7 @@ export function reducerDestinosViajes (
     case DestinosViajesActionTypes.NUEVO_DESTINO:  // Si la acción es agregar un nuevo destino de viaje
       return {
         ...state,
-        items: [...state.items, action.destino]  // Agrega el nuevo destino a la lista de destinos de viaje
+        items: [...state.items, (action as NuevoDestinoAction).destino]  // Agrega el nuevo destino a la lista de destinos de viaje
       };
     case DestinosViajesActionTypes.BORRAR_DESTINO: {
       const destinoABorrar = (action as BorrarDestinoAction).destino;
@@ -72,8 +92,56 @@ export function reducerDestinosViajes (
         favorito: (action as ElegidoFavoritoAction).destino
       };
     }
+    case DestinosViajesActionTypes.VOTO_ARRIBA: {
+      const destinoVoto = (action as VotoArribaAction).destino;
+      return {
+        ...state,
+        items: state.items.map(item =>
+          item.nombre === destinoVoto.nombre && item.imagenUrl === destinoVoto.imagenUrl
+            ? { ...item, votos: (item.votos || 0) + 1 } as DestinoViaje
+            : item
+        )
+      };
     }
+    case DestinosViajesActionTypes.VOTO_ABAJO: {
+      const destinoVoto = (action as VotoAbajoAction).destino;
+      return {
+        ...state,
+        items: state.items.map(item =>
+          item.nombre === destinoVoto.nombre && item.imagenUrl === destinoVoto.imagenUrl
+            ? { ...item, votos: Math.max((item.votos || 0) - 1, 0) } as DestinoViaje
+            : item
+        )
+      };
+    }
+    case DestinosViajesActionTypes.RESET_VOTOS: {
+      return {
+        ...state,
+        items: state.items.map(item => ({ ...item, votos: 0 } as DestinoViaje))
+      };
+    }
+  }
   return state;  // Retorna el estado sin cambios si la acción no coincide con ningún caso
 }
 
+// Effects
+@Injectable()
+export class DestinosViajesEffects {
+  private actions$ = inject(Actions);
+
+  guardarVotos$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(
+          DestinosViajesActionTypes.VOTO_ARRIBA,
+          DestinosViajesActionTypes.VOTO_ABAJO,
+          DestinosViajesActionTypes.RESET_VOTOS
+        ),
+        tap((action) => {
+          console.log('📊 Acción de voto registrada:', action.type);
+        })
+      ),
+    { dispatch: false }
+  );
+}
 

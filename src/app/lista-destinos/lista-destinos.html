@@ -36,7 +36,10 @@
       <section class="activity-card">
         <header class="activity-header">
           <h5 class="mb-0">Actividad</h5>
-          <span class="activity-count">{{ updates.length }}</span>
+          <div class="activity-header-actions">
+            <span class="activity-count">{{ updates.length }}</span>
+            <button type="button" class="btn btn-sm btn-outline-warning" (click)="resetVotos()" title="Reiniciar votos">🔄 Reset</button>
+          </div>
         </header>
 
         @if (updates.length === 0) {
