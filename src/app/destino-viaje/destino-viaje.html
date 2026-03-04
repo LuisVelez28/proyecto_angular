@@ -22,8 +22,8 @@
         </li>
       }
     </ul>
-    <a href="#" class="btn-card" (click)="ir()">Ir</a>
-    @if (destino?.isSelected()) {
+    <a href="#" class="btn-card" (click)="ir($event)">Ir</a>
+    @if (isSelected) {
       <span ngNonBindable>{{PREFERIDO}}</span>
     }
     <a [routerLink]="['/destino']" class="btn-card">Ver destino</a>

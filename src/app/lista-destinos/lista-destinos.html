@@ -15,23 +15,44 @@
   </div>
   <hr class="mb-5" />
   <div class="row row-flex">
-    @for (destino of destinos; track destino) {
-      <app-destino-viaje
-        [destino]="destino"
-        [idx]="destinos.indexOf(destino) + 1"
-        (clicked)="elegido($event)">
-      </app-destino-viaje>
+    @for (destino of (destinos$ | async); track destino; let i = $index) {
+      <div class="col-12 col-sm-6 col-lg-4 mb-4">
+        <app-destino-viaje
+          [destino]="destino"
+          [idx]="i + 1"
+          [isSelected]="(favorito$ | async) === destino"
+          (clicked)="elegido($event)">
+        </app-destino-viaje>
+        <div class="d-grid mt-2">
+          <button type="button" class="btn btn-outline-danger btn-sm" (click)="borrar(destino)">Borrar</button>
+        </div>
+      </div>
     }
   </div>
 
   <hr class="mb-5" />
-  <div class="row row-flex">
-    <h5>Actividad</h5>
-    <ul>
-      @for (update of updates; track update) {
-        <li>{{ update }}</li>
-      }
-    </ul>
+  <div class="row">
+    <div class="col-12">
+      <section class="activity-card">
+        <header class="activity-header">
+          <h5 class="mb-0">Actividad</h5>
+          <span class="activity-count">{{ updates.length }}</span>
+        </header>
+
+        @if (updates.length === 0) {
+          <p class="activity-empty">Aún no hay actividades registradas.</p>
+        } @else {
+          <ul class="activity-list">
+            @for (update of updates; track update; let i = $index) {
+              <li>
+                <span class="activity-index">#{{ i + 1 }}</span>
+                <span class="activity-text">{{ update }}</span>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    </div>
   </div>
 
 </div>

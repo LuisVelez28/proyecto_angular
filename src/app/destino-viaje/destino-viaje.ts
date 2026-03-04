@@ -10,16 +10,20 @@ import { RouterLink } from "@angular/router";
 })
 export class DestinoViajeComponent {
   @Input() destino: DestinoViajeModel | undefined;
+  @Input() isSelected: boolean = false;
   @Input('idx') position: number | undefined;
-  @HostBinding('class') clase: string = 'col-md-4';
+  @HostBinding('class') clase: string = 'd-block h-100';
   @Output() clicked: EventEmitter<DestinoViajeModel>;
 
   constructor() {
     this.clicked = new EventEmitter();
   }
 
-  ir() {
-    this.clicked.emit( this.destino);
+  ir(event: Event) {
+    event.preventDefault();
+    if (this.destino) {
+      this.clicked.emit(this.destino);
+    }
     return false;
 }
 }
