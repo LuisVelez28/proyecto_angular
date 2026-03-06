@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { DestinoViaje } from '../models/destino-viaje.model';
+import { DestinoViaje } from '../../models/destino-viaje.model';
 import { fromEvent, of } from 'rxjs';
 import { map, filter, debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';

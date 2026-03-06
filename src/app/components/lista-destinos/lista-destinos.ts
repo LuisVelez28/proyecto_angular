@@ -2,12 +2,12 @@ import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Observable, distinctUntilChanged, filter, map } from 'rxjs';
-import { DestinoViaje } from '../models/destino-viaje.model';
+import { DestinoViaje } from '../../models/destino-viaje.model';
 import { DestinoViajeComponent } from '../destino-viaje/destino-viaje';
-import { DestinoViajeApiClient } from '../models/destino-api-client.model';
+import { DestinoViajeApiClient } from '../../models/destino-api-client.model';
 import { FormDestinoViaje } from '../form-destino-viaje/form-destino-viaje';
-import { AppState } from '../app';
-import { NuevoDestinoAction, ElegidoFavoritoAction, BorrarDestinoAction, ResetVotosAction } from '../models/destinos-viajes-state.model';
+import { AppState } from '../../app';
+import { NuevoDestinoAction, ElegidoFavoritoAction, BorrarDestinoAction, ResetVotosAction } from '../../models/destinos-viajes-state.model';
 
 @Component({
   selector: 'app-lista-destinos',

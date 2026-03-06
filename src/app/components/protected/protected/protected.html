@@ -1,0 +1,7 @@
+<section class="protected-card">
+	<h2>Zona protegida</h2>
+	<p>Bienvenido, <strong>{{ authService.getUser() }}</strong>.</p>
+	<p>Si ves esta pantalla, el guard permitió el acceso porque hay sesión activa.</p>
+
+	<button type="button" (click)="logout()">Cerrar sesión</button>
+</section>

@@ -1,0 +1,48 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>Iniciar Sesión</h2>
+    <form *ngIf="!authService.getUser(); else userLogged" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">Usuario</label>
+        <input 
+          type="text" 
+          id="username" 
+          formControlName="username"
+          placeholder="Ingresa tu usuario"
+          [class.error]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+        <div class="error-message" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+          El usuario es requerido
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input 
+          type="password" 
+          id="password" 
+          formControlName="password"
+          placeholder="Ingresa tu contraseña"
+          [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+        <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          La contraseña es requerida
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="loginForm.invalid" class="btn-login">
+        Iniciar Sesión
+      </button>
+
+      <div class="success-message" *ngIf="loginSuccess">
+        ¡Login exitoso!
+      </div>
+      <div class="error-message" *ngIf="loginError">
+        Usuario o contraseña incorrectos
+      </div>
+    </form>
+
+    <ng-template #userLogged>
+      <p class="success-message">Ya iniciaste sesión como: {{ authService.getUser() }}</p>
+      <button type="button" class="btn-login" (click)="logout()">Cerrar sesión</button>
+    </ng-template>
+  </div>
+</div>
