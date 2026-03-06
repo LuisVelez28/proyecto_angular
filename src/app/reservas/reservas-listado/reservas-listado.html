@@ -1,0 +1,32 @@
+<section class="reservas-listado">
+	<header class="header">
+		<h2>Reservas</h2>
+		<p>Consulta el estado y la información de cada reserva.</p>
+	</header>
+
+	<div class="cards">
+		<article class="card" *ngFor="let reserva of reservas">
+			<div class="card-row">
+				<span class="label">Código</span>
+				<strong>#{{ reserva.id }}</strong>
+			</div>
+			<div class="card-row">
+				<span class="label">Pasajero</span>
+				<span>{{ reserva.pasajero }}</span>
+			</div>
+			<div class="card-row">
+				<span class="label">Destino</span>
+				<span>{{ reserva.destino }}</span>
+			</div>
+			<div class="card-row">
+				<span class="label">Fecha</span>
+				<span>{{ reserva.fecha }}</span>
+			</div>
+
+			<p class="estado" [class.pendiente]="reserva.estado === 'Pendiente'">
+				{{ reserva.estado }}
+			</p>
+		<!-- Navegación relativa: desde raíz de reservas al detalle -->			<a class="btn" [routerLink]="[reserva.id]">Ver detalle</a>
+		</article>
+	</div>
+</section>

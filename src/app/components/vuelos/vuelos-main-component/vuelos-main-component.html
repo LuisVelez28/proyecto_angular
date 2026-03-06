@@ -5,12 +5,13 @@
     <div *ngFor="let vuelo of vuelos" class="vuelo-card">
       <h4>{{ vuelo.destino }}</h4>
       <p>Precio: €{{ vuelo.precio }}</p>
-      <!-- Navegación relativa usando routerLink -->
+      <!-- Navegación relativa: desde 'main' sube un nivel y entra a 'detalle' -->
       <a [routerLink]="['../detalle', vuelo.id]" class="btn">Ver Detalle</a>
     </div>
   </div>
   
   <div class="actions">
+    <!-- Navegación relativa: desde 'main' al hermano 'mas-info' -->
     <a routerLink="../mas-info" class="btn-secondary">Más Información</a>
   </div>
 </div>

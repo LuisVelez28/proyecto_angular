@@ -1,6 +1,6 @@
 <div class="vuelos-detalle">
   <h3>Detalle del Vuelo #{{ id }}</h3>
-  
+
   <div class="detalle-content" *ngIf="vueloDetalle">
     <div class="info-row">
       <strong>Destino:</strong>
@@ -19,10 +19,10 @@
       <span>{{ vueloDetalle.llegada }}</span>
     </div>
   </div>
-  
+
   <div class="actions">
-    <!-- Navegación relativa hacia atrás -->
-    <a routerLink="../main" class="btn">Volver al Listado</a>
-    <a routerLink="../mas-info" class="btn-secondary">Más Info</a>
+    <!-- Navegación absoluta para garantizar funcionamiento -->
+    <a routerLink="/vuelos/main" class="btn">Volver al Listado</a>
+    <a routerLink="/vuelos/mas-info" class="btn-secondary">Más Info</a>
   </div>
 </div>

@@ -1,0 +1,29 @@
+<section class="reservas-detalle" *ngIf="reserva">
+	<header>
+		<h2>Detalle de Reserva #{{ reserva.id }}</h2>
+	</header>
+
+	<div class="panel">
+		<div class="row">
+			<span>Pasajero</span>
+			<strong>{{ reserva.pasajero }}</strong>
+		</div>
+		<div class="row">
+			<span>Destino</span>
+			<strong>{{ reserva.destino }}</strong>
+		</div>
+		<div class="row">
+			<span>Fecha</span>
+			<strong>{{ reserva.fecha }}</strong>
+		</div>
+		<div class="row">
+			<span>Asiento</span>
+			<strong>{{ reserva.asiento }}</strong>
+		</div>
+		<div class="row">
+			<span>Estado</span>
+			<strong>{{ reserva.estado }}</strong>
+		</div>
+	</div>
+  <!-- Navegación relativa: desde detalle/:id sube al listado -->	<a class="btn-back" routerLink="../">Volver al listado</a>
+</section>
