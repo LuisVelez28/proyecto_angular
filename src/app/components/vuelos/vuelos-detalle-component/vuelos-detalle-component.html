@@ -1,1 +1,28 @@
-<p>vuelos-detalle-component works!</p>
+<div class="vuelos-detalle">
+  <h3>Detalle del Vuelo #{{ id }}</h3>
+  
+  <div class="detalle-content" *ngIf="vueloDetalle">
+    <div class="info-row">
+      <strong>Destino:</strong>
+      <span>{{ vueloDetalle.destino }}</span>
+    </div>
+    <div class="info-row">
+      <strong>Precio:</strong>
+      <span>€{{ vueloDetalle.precio }}</span>
+    </div>
+    <div class="info-row">
+      <strong>Hora de Salida:</strong>
+      <span>{{ vueloDetalle.salida }}</span>
+    </div>
+    <div class="info-row">
+      <strong>Hora de Llegada:</strong>
+      <span>{{ vueloDetalle.llegada }}</span>
+    </div>
+  </div>
+  
+  <div class="actions">
+    <!-- Navegación relativa hacia atrás -->
+    <a routerLink="../main" class="btn">Volver al Listado</a>
+    <a routerLink="../mas-info" class="btn-secondary">Más Info</a>
+  </div>
+</div>

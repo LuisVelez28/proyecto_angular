@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-vuelos-component',
-  imports: [],
+  standalone: true,
+  imports: [RouterModule],
   templateUrl: './vuelos-component.html',
   styleUrl: './vuelos-component.scss',
 })

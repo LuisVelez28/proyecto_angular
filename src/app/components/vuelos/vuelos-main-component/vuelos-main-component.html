@@ -1,1 +1,16 @@
-<p>vuelos-main-component works!</p>
+<div class="vuelos-main">
+  <h3>Listado de Vuelos Disponibles</h3>
+  
+  <div class="vuelos-list">
+    <div *ngFor="let vuelo of vuelos" class="vuelo-card">
+      <h4>{{ vuelo.destino }}</h4>
+      <p>Precio: €{{ vuelo.precio }}</p>
+      <!-- Navegación relativa usando routerLink -->
+      <a [routerLink]="['../detalle', vuelo.id]" class="btn">Ver Detalle</a>
+    </div>
+  </div>
+  
+  <div class="actions">
+    <a routerLink="../mas-info" class="btn-secondary">Más Información</a>
+  </div>
+</div>
