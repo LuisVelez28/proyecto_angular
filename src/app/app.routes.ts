@@ -8,8 +8,6 @@ import { VuelosComponent } from './components/vuelos/vuelos-component/vuelos-com
 import { VuelosMainComponent } from './components/vuelos/vuelos-main-component/vuelos-main-component';
 import { VuelosMasInfoComponent } from './components/vuelos/vuelos-mas-info-component/vuelos-mas-info-component';
 import { VuelosDetalleComponent } from './components/vuelos/vuelos-detalle-component/vuelos-detalle-component';
-import { ReservasListado } from './reservas/reservas-listado/reservas-listado';
-import { ReservasDetalle } from './reservas/reservas-detalle/reservas-detalle';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -33,11 +31,8 @@ export const routes: Routes = [
 
   {
     path: 'reservas',
-    canActivate: [usuarioLogueadoGuard],
-    children: [
-      { path: '', component: ReservasListado },
-      { path: ':id', component: ReservasDetalle }
-    ]
+    // Lazy loading del módulo para que los providers funcionen
+    loadChildren: () => import('./reservas/reservas/reservas-module').then(m => m.ReservasModule)
   },
 
   { path: '**', redirectTo: '/home' }

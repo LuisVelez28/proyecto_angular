@@ -1,14 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
-interface Reserva {
-  id: number;
-  pasajero: string;
-  destino: string;
-  fecha: string;
-  estado: 'Confirmada' | 'Pendiente';
-}
+import {
+  ReservasApiClient,
+  type ReservaApi,
+  RESERVAS_CONFIG,
+  type ReservasConfig,
+  RESERVAS_API_ALIAS
+} from '../reservas-api-client';
 
 @Component({
   selector: 'app-reservas-listado',
@@ -18,9 +17,23 @@ interface Reserva {
   styleUrl: './reservas-listado.scss',
 })
 export class ReservasListado {
-  reservas: Reserva[] = [
-    { id: 101, pasajero: 'Ana Torres', destino: 'Madrid', fecha: '2026-03-15', estado: 'Confirmada' },
-    { id: 102, pasajero: 'Luis Vega', destino: 'Lima', fecha: '2026-03-20', estado: 'Pendiente' },
-    { id: 103, pasajero: 'Carla Núñez', destino: 'Bogotá', fecha: '2026-03-28', estado: 'Confirmada' }
+  // Probando las 3 inyecciones:
+
+  // 1) InjectionToken
+  private readonly config = inject(RESERVAS_CONFIG);
+
+  // 2) useClass - recibe la clase decorada automáticamente
+  private readonly reservasApiClient = inject(ReservasApiClient);
+
+  // 3) useExisting - inyecta el alias que apunta al mismo servicio
+  private readonly reservasApiAlias = inject(RESERVAS_API_ALIAS);
+
+  // Info para mostrar en el HTML
+  injectionInfo = [
+    `✅ 1) InjectionToken: ${this.config.apiEndpoint} (timeout: ${this.config.timeout}ms)`,
+    `✅ 2) useClass: ReservasApiClientDecorated (clase decorada activa)`,
+    `✅ 3) useExisting: Alias apunta al mismo servicio (${this.reservasApiClient === this.reservasApiAlias})`
   ];
+
+  reservas: ReservaApi[] = this.reservasApiClient.getAll();
 }

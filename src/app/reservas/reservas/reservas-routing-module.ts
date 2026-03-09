@@ -4,8 +4,8 @@ import { ReservasListado } from '../reservas-listado/reservas-listado';
 import { ReservasDetalle } from '../reservas-detalle/reservas-detalle';
 
 const routes: Routes = [
-  { path: 'reservas', component: ReservasListado },
-  { path: 'reservas/:id', component: ReservasDetalle }
+  { path: '', component: ReservasListado },
+  { path: ':id', component: ReservasDetalle }
 ];
 
 @NgModule({

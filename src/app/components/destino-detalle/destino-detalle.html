@@ -1,1 +1,14 @@
-<p>destino-detalle works!</p>
+<section class="destino-detalle">
+	<h2>Ver destino</h2>
+	<p class="intro">Comprobacion de inyecciones heredadas en este componente.</p>
+
+	<div class="estado">Inyecciones recibidas: {{ inyeccionesInfo.length }}</div>
+
+	<ul class="inyecciones-lista">
+		<li *ngFor="let inj of inyeccionesInfo">
+			<strong>{{ inj.tipo }}</strong>
+			<span>{{ inj.valor }}</span>
+			<small>{{ inj.detalles }}</small>
+		</li>
+	</ul>
+</section>

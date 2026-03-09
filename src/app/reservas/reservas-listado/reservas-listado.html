@@ -2,6 +2,9 @@
 	<header class="header">
 		<h2>Reservas</h2>
 		<p>Consulta el estado y la información de cada reserva.</p>
+		<div class="di-info-container">
+			<p class="di-info" *ngFor="let info of injectionInfo">{{ info }}</p>
+		</div>
 	</header>
 
 	<div class="cards">
