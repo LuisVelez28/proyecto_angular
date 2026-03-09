@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, InjectionToken } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
@@ -16,12 +16,23 @@ import {
   ReservasApiClientDecorated
 } from './reservas/reservas-api-client';
 
+export interface AppConfig {
+  apiEndpoint: string;
+}
+
+export const APP_CONFIG_VALUE: AppConfig = {
+  apiEndpoint: 'http://localhost:3000'
+};
+
+export const APP_CONFIG = new InjectionToken<AppConfig>('app.config');
+
 const destinosReducer = (state: DestinosViajesState | undefined, action: Action) =>
   reducerDestinosViajes(state, action as any);
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    { provide: APP_CONFIG, useValue: APP_CONFIG_VALUE },
     provideRouter(routes),
     provideStore({ destinos: destinosReducer }),
     provideEffects(DestinosViajesEffects),

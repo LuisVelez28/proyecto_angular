@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DestinoViaje } from '../../models/destino-viaje.model';
 import { fromEvent, of } from 'rxjs';
 import { map, filter, debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
+import { APP_CONFIG, AppConfig } from '../../app.config';
 
 @Component({
   selector: 'app-form-destino-viaje',
@@ -18,7 +19,10 @@ export class FormDestinoViaje {
   form;
   searchResults: string[] = [];
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder, 
+    @Inject(APP_CONFIG) private appConfig: AppConfig
+  ) {
     this.onItemAdded = new EventEmitter<DestinoViaje>();
     this.form = this.fb.group({
       nombre: ['', Validators.compose([
@@ -62,11 +66,7 @@ export class FormDestinoViaje {
         debounceTime(200), // Esperar 300ms antes de emitir el valor
         distinctUntilChanged(), // Solo emitir si el valor es diferente al anterior
         switchMap(value =>
-          ajax.getJSON<string[]>('/assets/datos.json').pipe(
-            map(destinos => {
-              const term = value.toLowerCase().trim();
-              return destinos.filter(destino => destino.toLowerCase().includes(term));
-            }),
+          ajax.getJSON<string[]>(`${this.appConfig.apiEndpoint}/ciudades?q=${encodeURIComponent(value)}`).pipe(
             catchError(() => of([]))
           )
         )
