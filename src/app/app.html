@@ -2,29 +2,37 @@
   <header class="app-header">
     <div class="header-content">
       <div class="logo-section">
-        <h1 class="app-title">✈️ Wishlist</h1>
-        <p class="app-subtitle">Descubre los mejores destinos</p>
+        <h1 class="app-title">{{ 'APP_TITLE' | translate }}</h1>
+        <p class="app-subtitle">{{ 'APP_SUBTITLE' | translate }}</p>
+      </div>
+      <div class="lang-selector">
+        <label for="lang-select">🌐</label>
+        <select id="lang-select" (change)="changeLang($any($event.target).value)">
+          @for (lang of langs; track lang) {
+            <option [value]="lang">{{ lang | uppercase }}</option>
+          }
+        </select>
       </div>
       <nav class="navbar">
         <a routerLink="/home" routerLinkActive="active" class="nav-link">
           <span class="icon">🏠</span>
-          <span>Mis destinos</span>
+          <span>{{ 'NAV_DESTINOS' | translate }}</span>
         </a>
         <a routerLink="/destino" routerLinkActive="active" class="nav-link">
           <span class="icon">📍</span>
-          <span>Ver destino</span>
+          <span>{{ 'NAV_DESTINOS' | translate }}</span>
         </a>
         <a routerLink="/vuelos" routerLinkActive="active" class="nav-link">
           <span class="icon">✈️</span>
-          <span>Vuelos</span>
+          <span>{{ 'NAV_VUELOS' | translate }}</span>
         </a>
         <a routerLink="/reservas" routerLinkActive="active" class="nav-link">
           <span class="icon">📋</span>
-          <span>Reservas</span>
+          <span>{{ 'NAV_RESERVAS' | translate }}</span>
         </a>
         <a routerLink="/login" routerLinkActive="active" class="nav-link">
           <span class="icon">🔐</span>
-          <span>Login</span>
+          <span>{{ 'NAV_LOGIN' | translate }}</span>
         </a>
       </nav>
     </div>
@@ -35,7 +43,7 @@
   </main>
 
   <footer class="app-footer">
-    <p>&copy; 2026 Wishlist de Viajes. Todos los derechos reservados.</p>
+    <p>&copy; {{ 'FOOTER' | translate }}</p>
   </footer>
 </div>
 

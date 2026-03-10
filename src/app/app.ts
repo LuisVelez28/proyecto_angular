@@ -1,8 +1,9 @@
 import { Component, signal } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, UpperCasePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { Observable } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DestinosViajesState } from './models/destinos-viajes-state.model';
 import { VuelosComponent } from './components/vuelos/vuelos-component/vuelos-component';
 import { VuelosMainComponent } from './components/vuelos/vuelos-main-component/vuelos-main-component';
@@ -23,13 +24,22 @@ export const childrenRoutesVuelos: Routes = [
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule, FormsModule, ReactiveFormsModule, AsyncPipe],
+  imports: [RouterModule, FormsModule, ReactiveFormsModule, AsyncPipe, UpperCasePipe, TranslateModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
   protected readonly title = signal('proyecto_angular');
+  readonly langs = ['es', 'en', 'fr'];
   time = new Observable(observer => {
     setInterval(() => observer.next(new Date().toString()), 1000);
   });
+
+  constructor(private translate: TranslateService) {
+    this.translate.use('es');
+  }
+
+  changeLang(lang: string) {
+    this.translate.use(lang);
+  }
 }

@@ -1,6 +1,8 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, InjectionToken, APP_INITIALIZER } from '@angular/core';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, HttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
+import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
+import { createTranslateLoader } from './services/translate-loader';
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideEffects } from '@ngrx/effects';
@@ -46,6 +48,14 @@ export const appConfig: ApplicationConfig = {
     // Providers globales de reservas
     { provide: RESERVAS_CONFIG, useValue: RESERVAS_CONFIG_VALUE },
     { provide: ReservasApiClient, useClass: ReservasApiClientDecorated },
-    { provide: RESERVAS_API_ALIAS, useExisting: ReservasApiClient }
+    { provide: RESERVAS_API_ALIAS, useExisting: ReservasApiClient },
+    provideTranslateService({
+      defaultLanguage: 'es',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createTranslateLoader,
+        deps: [HttpClient]
+      }
+    })
   ]
 };

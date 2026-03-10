@@ -7,7 +7,7 @@ import { DestinoViajeComponent } from '../destino-viaje/destino-viaje';
 import { DestinoViajeApiClient } from '../../models/destino-api-client.model';
 import { FormDestinoViaje } from '../form-destino-viaje/form-destino-viaje';
 import { AppState } from '../../app';
-import { NuevoDestinoAction, ElegidoFavoritoAction, BorrarDestinoAction, ResetVotosAction } from '../../models/destinos-viajes-state.model';
+import { ElegidoFavoritoAction, BorrarDestinoAction, ResetVotosAction } from '../../models/destinos-viajes-state.model';
 
 @Component({
   selector: 'app-lista-destinos',
@@ -44,9 +44,7 @@ export class ListaDestinos implements OnInit {
   agregado(d: DestinoViaje): boolean {
     this.onItemAdded.emit(d);
     this.updates.push('Se agregó a ' + d.nombre);
-    this.store.dispatch( new NuevoDestinoAction(d) );
-    this.store.dispatch( new ElegidoFavoritoAction(d) );
-    
+
     // Guardar en el servidor
     this.destinosApiClient.add(d).subscribe({
       next: (response) => {

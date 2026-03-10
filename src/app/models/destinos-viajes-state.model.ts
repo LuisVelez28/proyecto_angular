@@ -3,9 +3,8 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { tap } from 'rxjs/operators';
 import { DestinoViaje } from './destino-viaje.model';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Store } from '@ngrx/store';
-import { firstValueFrom } from 'rxjs';
+import { DexieService } from '../services/dexie.service';
 
 // Estado
 export interface DestinosViajesState {  // Interfaz que define el estado de destinos de viaje
@@ -31,6 +30,7 @@ export enum DestinosViajesActionTypes {  // Enum que define los tipos de accione
   VOTO_ABAJO = '[Destinos Viajes] Voto Abajo',  // Acción para decrementar votos de un destino
   RESET_VOTOS = '[Destinos Viajes] Reset Votos',  // Acción para reiniciar todos los votos a 0
   INIT_MY_DATA = '[Destinos Viajes] Init My Data',  // Acción para inicializar datos desde API
+  INIT_FROM_DEXIE = '[Destinos Viajes] Init From Dexie',  // Acción para inicializar datos desde IndexedDB
 };
 
 export class NuevoDestinoAction implements Action {  // Clase que representa la acción de agregar un nuevo destino de viaje
@@ -67,7 +67,12 @@ export class InitMyDataAction implements Action {
   constructor(public destinos: DestinoViaje[]) {}
 };
 
-export type DestinosViajesActions = NuevoDestinoAction | ElegidoFavoritoAction | BorrarDestinoAction | VotoArribaAction | VotoAbajoAction | ResetVotosAction | InitMyDataAction;
+export class InitFromDexieAction implements Action {
+  type = DestinosViajesActionTypes.INIT_FROM_DEXIE;
+  constructor(public destinos: DestinoViaje[]) {}
+};
+
+export type DestinosViajesActions = NuevoDestinoAction | ElegidoFavoritoAction | BorrarDestinoAction | VotoArribaAction | VotoAbajoAction | ResetVotosAction | InitMyDataAction | InitFromDexieAction;
 
 // Reducer
 
@@ -135,6 +140,12 @@ export function reducerDestinosViajes (
         items: (action as InitMyDataAction).destinos
       };
     }
+    case DestinosViajesActionTypes.INIT_FROM_DEXIE: {
+      return {
+        ...state,
+        items: (action as InitFromDexieAction).destinos
+      };
+    }
   }
   return state;  // Retorna el estado sin cambios si la acción no coincide con ningún caso
 }
@@ -168,21 +179,22 @@ export interface AppState {
 @Injectable()
 export class AppLoadService {
   private store = inject(Store<AppState>);
-  private http = inject(HttpClient);
+  private dexieService = inject(DexieService);
 
   async intializeDestinosViajesState(): Promise<void> {
-    const headers: HttpHeaders = new HttpHeaders({'X-API-TOKEN': 'token-seguridad'});
-    const response = await firstValueFrom(
-      this.http.get<string[]>('http://localhost:3000/mydestinos', { headers })
-    );
-    const destinos = (response || []).map(
-      (nombre) => new DestinoViaje(nombre, 'assets/images/default.jpg')
-    );
-    this.store.dispatch(new InitMyDataAction(destinos));
+    try {
+      const destinosPersistidos = await this.dexieService.destinos.toArray();
+      const destinos = destinosPersistidos.map(
+        (destinoGuardado) => new DestinoViaje(destinoGuardado.nombre, destinoGuardado.imagenUrl)
+      );
+      this.store.dispatch(new InitFromDexieAction(destinos));
+    } catch (error) {
+      console.warn('No se pudieron cargar destinos desde Dexie. Se inicia con lista vacia.', error);
+      this.store.dispatch(new InitFromDexieAction([]));
+    }
   }
 }
 
 export function init_app(appLoadService: AppLoadService): () => Promise<any> {
   return () => appLoadService.intializeDestinosViajesState();
 }
-
