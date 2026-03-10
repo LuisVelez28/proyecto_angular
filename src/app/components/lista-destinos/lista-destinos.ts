@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { Observable, distinctUntilChanged, filter, map } from 'rxjs';
+import { Observable, distinctUntilChanged, filter } from 'rxjs';
 import { DestinoViaje } from '../../models/destino-viaje.model';
 import { DestinoViajeComponent } from '../destino-viaje/destino-viaje';
 import { DestinoViajeApiClient } from '../../models/destino-api-client.model';
@@ -38,9 +38,7 @@ export class ListaDestinos implements OnInit {
   }
 
   ngOnInit(): void {
-    this.destinosApiClient.getAll().forEach(destino => {
-      this.store.dispatch(new NuevoDestinoAction(destino));
-    });
+    // La carga inicial se hace con APP_INITIALIZER.
   }
 
   agregado(d: DestinoViaje): boolean {
@@ -48,6 +46,17 @@ export class ListaDestinos implements OnInit {
     this.updates.push('Se agregó a ' + d.nombre);
     this.store.dispatch( new NuevoDestinoAction(d) );
     this.store.dispatch( new ElegidoFavoritoAction(d) );
+    
+    // Guardar en el servidor
+    this.destinosApiClient.add(d).subscribe({
+      next: (response) => {
+        console.log('✅ Destino guardado en servidor:', response);
+      },
+      error: (err) => {
+        console.error('❌ Error al guardar en servidor:', err);
+      }
+    });
+    
     return false;
   }
 

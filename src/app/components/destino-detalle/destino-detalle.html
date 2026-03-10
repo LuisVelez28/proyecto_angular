@@ -1,14 +1,33 @@
 <section class="destino-detalle">
-	<h2>Ver destino</h2>
-	<p class="intro">Comprobacion de inyecciones heredadas en este componente.</p>
+	<h2>Mis Destinos</h2>
+	<p class="intro">Destinos guardados desde el API</p>
 
-	<div class="estado">Inyecciones recibidas: {{ inyeccionesInfo.length }}</div>
+	<div class="acciones">
+		<button (click)="recargar()" [disabled]="loading">
+			{{ loading ? 'Cargando...' : 'Recargar' }}
+		</button>
+	</div>
 
-	<ul class="inyecciones-lista">
-		<li *ngFor="let inj of inyeccionesInfo">
-			<strong>{{ inj.tipo }}</strong>
-			<span>{{ inj.valor }}</span>
-			<small>{{ inj.detalles }}</small>
+	<div *ngIf="error" class="error">
+		❌ {{ error }}
+	</div>
+
+	<div *ngIf="loading && !error" class="loading">
+		⏳ Cargando destinos...
+	</div>
+
+	<div *ngIf="!loading && !error && destinos.length === 0" class="empty">
+		📭 No hay destinos guardados todavía
+	</div>
+
+	<ul *ngIf="!loading && !error && destinos.length > 0" class="destinos-lista">
+		<li *ngFor="let destino of destinos; let i = index">
+			<span class="numero">{{ i + 1 }}</span>
+			<strong>{{ destino }}</strong>
 		</li>
 	</ul>
+
+	<div *ngIf="!loading && !error && destinos.length > 0" class="total">
+		Total: {{ destinos.length }} destino(s)
+	</div>
 </section>

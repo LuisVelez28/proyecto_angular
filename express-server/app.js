@@ -17,6 +17,6 @@ var misdestinos = [];
 app.get("/mydestinos", (req, res, next) => res.json(misdestinos));
 app.post("/mydestinos", (req, res, next) => {
   console.log(req.body);
-  misdestinos.push(req.body);
+  misdestinos.push(req.body.nuevo);
   res.json(misdestinos);
 });
