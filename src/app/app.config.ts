@@ -1,4 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, InjectionToken, APP_INITIALIZER } from '@angular/core';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient, HttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
@@ -38,6 +39,7 @@ const MAPBOX_ACCESS_TOKEN =
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideAnimations(),
     provideHttpClient(),
     { provide: APP_CONFIG, useValue: APP_CONFIG_VALUE },
     provideRouter(routes),

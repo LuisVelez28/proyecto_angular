@@ -1,4 +1,6 @@
-<div class="card-content">
+<div class="card-content"
+     [@estadoDestino]="isSelected ? 'seleccionado' : 'no-seleccionado'"
+     [@entradaTarjeta]>
   <div class="card-img">
     <img [src]="destino?.imagenUrl" alt="{{ destino?.nombre }}" />
     <span><h4>{{position}}</h4></span>
