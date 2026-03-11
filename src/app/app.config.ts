@@ -32,6 +32,9 @@ export const APP_CONFIG = new InjectionToken<AppConfig>('app.config');
 const destinosReducer = (state: DestinosViajesState | undefined, action: Action) =>
   reducerDestinosViajes(state, action as any);
 
+const MAPBOX_ACCESS_TOKEN =
+  (globalThis as { __env?: { MAPBOX_ACCESS_TOKEN?: string } }).__env?.MAPBOX_ACCESS_TOKEN ?? '';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -56,6 +59,6 @@ export const appConfig: ApplicationConfig = {
         useFactory: createTranslateLoader,
         deps: [HttpClient]
       }
-    })
+    }),
   ]
 };

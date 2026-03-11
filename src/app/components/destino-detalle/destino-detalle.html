@@ -9,15 +9,15 @@
 	</div>
 
 	<div *ngIf="error" class="error">
-		❌ {{ error }}
+		{{ error }}
 	</div>
 
 	<div *ngIf="loading && !error" class="loading">
-		⏳ Cargando destinos...
+		Cargando destinos...
 	</div>
 
 	<div *ngIf="!loading && !error && destinos.length === 0" class="empty">
-		📭 No hay destinos guardados todavía
+		No hay destinos guardados todavía
 	</div>
 
 	<ul *ngIf="!loading && !error && destinos.length > 0" class="destinos-lista">
@@ -30,4 +30,6 @@
 	<div *ngIf="!loading && !error && destinos.length > 0" class="total">
 		Total: {{ destinos.length }} destino(s)
 	</div>
+  <hr>
+  <div #mapContainer class="map-canvas"></div>
 </section>
