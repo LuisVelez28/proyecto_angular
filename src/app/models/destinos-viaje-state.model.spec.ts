@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { Store } from '@ngrx/store';
-import { vi } from 'vitest';
 
 import {
 	AppLoadService,
@@ -14,6 +13,26 @@ import {
 } from './destinos-viajes-state.model';
 import { DestinoViaje } from './destino-viaje.model';
 import { DexieService } from '../services/dexie.service';
+
+class StoreDouble {
+	readonly dispatchCalls: unknown[] = [];
+
+	dispatch(action: unknown): void {
+		this.dispatchCalls.push(action);
+	}
+}
+
+class DexieCollectionDouble {
+	constructor(private readonly result: unknown[] | Error, private readonly shouldReject = false) {}
+
+	toArray(): Promise<unknown[]> {
+		if (this.shouldReject) {
+			return Promise.reject(this.result);
+		}
+
+		return Promise.resolve(this.result as unknown[]);
+	}
+}
 
 describe('DestinosViajesState (spec unico)', () => {
 	it('debe inicializar estado por defecto', () => {
@@ -82,47 +101,49 @@ describe('DestinosViajesState (spec unico)', () => {
 
 describe('AppLoadService (spec unico)', () => {
 	it('debe cargar desde Dexie y despachar InitFromDexieAction', async () => {
-		const dispatch = vi.fn();
-		const toArray = vi.fn().mockResolvedValue([
+		const storeDouble = new StoreDouble();
+		const destinosDexie = [
 			{ nombre: 'Bogota', imagenUrl: 'https://img/bogota.jpg' },
 			{ nombre: 'Quito', imagenUrl: 'https://img/quito.jpg' },
-		]);
+		];
 
 		TestBed.configureTestingModule({
 			providers: [
 				AppLoadService,
-				{ provide: Store, useValue: { dispatch } },
-				{ provide: DexieService, useValue: { destinos: { toArray } } },
+				{ provide: Store, useValue: storeDouble },
+				{ provide: DexieService, useValue: { destinos: new DexieCollectionDouble(destinosDexie) } },
 			],
 		});
 
 		const service = TestBed.inject(AppLoadService);
 		await service.intializeDestinosViajesState();
 
-		expect(dispatch).toHaveBeenCalledTimes(1);
-		const action = dispatch.mock.calls[0][0] as InitFromDexieAction;
+		expect(storeDouble.dispatchCalls.length).toBe(1);
+		const action = storeDouble.dispatchCalls[0] as InitFromDexieAction;
 		expect(action).toBeInstanceOf(InitFromDexieAction);
 		expect(action.destinos).toHaveLength(2);
 		expect(action.destinos[0]).toBeInstanceOf(DestinoViaje);
 	});
 
 	it('si Dexie falla, debe despachar InitFromDexieAction con lista vacia', async () => {
-		const dispatch = vi.fn();
-		const toArray = vi.fn().mockRejectedValue(new Error('Dexie unavailable'));
+		const storeDouble = new StoreDouble();
 
 		TestBed.configureTestingModule({
 			providers: [
 				AppLoadService,
-				{ provide: Store, useValue: { dispatch } },
-				{ provide: DexieService, useValue: { destinos: { toArray } } },
+				{ provide: Store, useValue: storeDouble },
+				{
+					provide: DexieService,
+					useValue: { destinos: new DexieCollectionDouble(new Error('Dexie unavailable'), true) },
+				},
 			],
 		});
 
 		const service = TestBed.inject(AppLoadService);
 		await service.intializeDestinosViajesState();
 
-		expect(dispatch).toHaveBeenCalledTimes(1);
-		const action = dispatch.mock.calls[0][0] as InitFromDexieAction;
+		expect(storeDouble.dispatchCalls.length).toBe(1);
+		const action = storeDouble.dispatchCalls[0] as InitFromDexieAction;
 		expect(action).toBeInstanceOf(InitFromDexieAction);
 		expect(action.destinos).toEqual([]);
 	});

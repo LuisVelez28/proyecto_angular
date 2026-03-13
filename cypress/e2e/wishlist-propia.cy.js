@@ -18,6 +18,11 @@ describe('Wishlist propia', () => {
       body: { ok: true, total: 1 },
     }).as('trackingTags');
 
+    cy.intercept('GET', '**/mydestinos', {
+      statusCode: 200,
+      body: ['Bogota', 'Quito', 'Lima'],
+    }).as('misDestinos');
+
     cy.visit('http://localhost:4200/home', {
       onBeforeLoad(win) {
         win.localStorage.clear();
@@ -53,5 +58,35 @@ describe('Wishlist propia', () => {
 
     cy.contains('.activity-text', 'Se ha elegido a Barcelona').should('be.visible');
     cy.contains('.activity-text', 'destino.ir: 1').should('be.visible');
+  });
+
+  it('muestra validaciones del formulario y no permite agregar datos invalidos', () => {
+    cy.get('#nombre').focus().blur();
+    cy.get('#imagenUrl').focus().blur();
+
+    cy.contains('.text-danger', 'El nombre es requerido.').should('be.visible');
+    cy.contains('.text-danger', 'La URL de la imagen es requerida.').should('be.visible');
+    cy.contains('button', 'Agregar').should('not.exist');
+
+    cy.get('#nombre').type('Pa');
+    cy.contains('.text-danger', 'El nombre debe tener al menos 3 caracteres.').should('be.visible');
+
+    cy.get('#nombre').clear().type('Paris');
+    cy.wait('@buscarCiudades');
+    cy.get('#imagenUrl').type('ftp://imagen-invalida');
+    cy.contains('.text-danger', 'La URL debe comenzar con http:// o https://').should('be.visible');
+    cy.contains('button', 'Agregar').should('not.exist');
+  });
+
+  it('carga la vista de detalle y muestra destinos obtenidos del API', () => {
+    cy.contains('a', '📍').click();
+
+    cy.wait('@misDestinos');
+    cy.contains('h2', 'Mis Destinos').should('be.visible');
+    cy.contains('strong', 'Bogota').should('be.visible');
+    cy.contains('strong', 'Quito').should('be.visible');
+    cy.contains('strong', 'Lima').should('be.visible');
+    cy.contains('.total', 'Total: 3 destino(s)').should('be.visible');
+    cy.get('.map-canvas').should('exist');
   });
 });
