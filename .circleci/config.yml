@@ -1,0 +1,30 @@
+version: 2.1
+
+jobs:
+  build:
+    working_directory: ~/myapp
+    docker:
+      - image: cimg/node:20.19-browsers
+    steps:
+      - checkout:
+          path: ~/myapp
+      - restore_cache:
+          key: angular-wishlist-{{ .Branch }}-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - save_cache:
+          key: angular-wishlist-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: Run unit tests
+          command: npm run test -- --watch=false
+      - run:
+          name: Build app
+          command: npm run build
+
+workflows:
+  ci:
+    jobs:
+      - build
