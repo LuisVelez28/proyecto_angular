@@ -9,6 +9,7 @@ import { VuelosComponent } from './components/vuelos/vuelos-component/vuelos-com
 import { VuelosMainComponent } from './components/vuelos/vuelos-main-component/vuelos-main-component';
 import { VuelosMasInfoComponent } from './components/vuelos/vuelos-mas-info-component/vuelos-mas-info-component';
 import { VuelosDetalleComponent } from './components/vuelos/vuelos-detalle-component/vuelos-detalle-component';
+import { Reconocimiento } from './reconocimiento';
 
 export interface AppState {
   destinos: DestinosViajesState;
@@ -24,12 +25,13 @@ export const childrenRoutesVuelos: Routes = [
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule, FormsModule, ReactiveFormsModule, AsyncPipe, UpperCasePipe, TranslateModule],
+  imports: [RouterModule, FormsModule, ReactiveFormsModule, AsyncPipe, UpperCasePipe, TranslateModule, Reconocimiento],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
   protected readonly title = signal('proyecto_angular');
+  showReconocimiento = signal(true);
   readonly langs = ['es', 'en', 'fr'];
   time = new Observable(observer => {
     setInterval(() => observer.next(new Date().toString()), 1000);
@@ -41,5 +43,9 @@ export class App {
 
   changeLang(lang: string) {
     this.translate.use(lang);
+  }
+
+  toggleReconocimiento() {
+    this.showReconocimiento.update(current => !current);
   }
 }

@@ -1,18 +1,19 @@
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { Observable, distinctUntilChanged, filter } from 'rxjs';
+import { Observable, distinctUntilChanged, filter, map } from 'rxjs';
 import { DestinoViaje } from '../../models/destino-viaje.model';
 import { DestinoViajeComponent } from '../destino-viaje/destino-viaje';
 import { DestinoViajeApiClient } from '../../models/destino-api-client.model';
 import { FormDestinoViaje } from '../form-destino-viaje/form-destino-viaje';
 import { AppState } from '../../app';
 import { ElegidoFavoritoAction, BorrarDestinoAction, ResetVotosAction } from '../../models/destinos-viajes-state.model';
+import { TrackearClick } from '../../trackear-click';
 
 @Component({
   selector: 'app-lista-destinos',
   standalone: true,
-  imports: [CommonModule, DestinoViajeComponent, FormDestinoViaje],
+  imports: [CommonModule, DestinoViajeComponent, FormDestinoViaje, TrackearClick],
   templateUrl: './lista-destinos.html',
   styleUrl: './lista-destinos.scss',
 })
@@ -21,12 +22,20 @@ export class ListaDestinos implements OnInit {
   updates: string[] = [];
   destinos$: Observable<DestinoViaje[]>;
   favorito$: Observable<DestinoViaje | null>;
+  trackingTagsRanking$: Observable<Array<{ tag: string; count: number }>>;
 
   constructor(@Inject(DestinoViajeApiClient) private destinosApiClient: DestinoViajeApiClient, private store: Store<AppState>) {
     this.onItemAdded = new EventEmitter();
     this.updates = [];
     this.destinos$ = this.store.select(state => state.destinos.items);
     this.favorito$ = this.store.select(state => state.destinos.favorito);
+    this.trackingTagsRanking$ = this.store.select(state => state.destinos.trackingTagsCount).pipe(
+      map((counts) =>
+        Object.entries(counts)
+          .map(([tag, count]) => ({ tag, count }))
+          .sort((a, b) => b.count - a.count)
+      )
+    );
     this.store.select(state => state.destinos.favorito)
       .pipe(
         filter((favorito): favorito is DestinoViaje => favorito !== null),

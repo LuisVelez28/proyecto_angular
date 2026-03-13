@@ -29,14 +29,14 @@
         <span class="vote-badge">{{ destino?.votos || 0 }}</span>
       </div>
       <div class="vote-buttons">
-        <a href="#" class="vote-btn up" title="A favor" (click)="voteUp()"><i class="material-icons md-18">thumb_up</i></a>
-        <a href="#" class="vote-btn down" title="En contra" (click)="voteDown()"><i class="material-icons md-18">thumb_down</i></a>
+        <a href="#" class="vote-btn up" title="A favor" data-tracking-tag="destino.vote.up" appTrackearClick (click)="voteUp()"><i class="material-icons md-18">thumb_up</i></a>
+        <a href="#" class="vote-btn down" title="En contra" data-tracking-tag="destino.vote.down" appTrackearClick (click)="voteDown()"><i class="material-icons md-18">thumb_down</i></a>
       </div>
     </div>
-    <a href="#" class="btn-card" (click)="ir($event)">Ir</a>
+    <a href="#" class="btn-card" data-tracking-tag="destino.ir" appTrackearClick (click)="ir($event)">Ir</a>
     @if (isSelected) {
       <span ngNonBindable>{{PREFERIDO}}</span>
     }
-    <a [routerLink]="['/destino']" class="btn-card">Ver destino</a>
+    <a [routerLink]="['/destino']" class="btn-card" data-tracking-tag="destino.ver-detalle" appTrackearClick>Ver destino</a>
   </div>
 </div>

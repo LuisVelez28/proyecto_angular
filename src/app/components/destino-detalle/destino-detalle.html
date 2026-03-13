@@ -30,6 +30,13 @@
 	<div *ngIf="!loading && !error && destinos.length > 0" class="total">
 		Total: {{ destinos.length }} destino(s)
 	</div>
-  <hr>
-  <div #mapContainer class="map-canvas"></div>
+	<hr>
+	<div
+		class="map-canvas"
+		appReconocimiento
+		[mapStyle]="style"
+		[mapCenter]="mapCenter"
+		[mapZoom]="mapZoom"
+		[markerMessage]="markerMessage"
+	></div>
 </section>

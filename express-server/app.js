@@ -21,6 +21,19 @@ app.post("/mydestinos", (req, res, next) => {
   res.json(misdestinos);
 });
 
+var trackingEvents = [];
+var trackingRouter = express.Router();
+trackingRouter.get('/', (req, res, next) => res.json(trackingEvents));
+trackingRouter.post('/', (req, res, next) => {
+  const payload = req.body || {};
+  trackingEvents.push({
+    timestamp: payload.timestamp || new Date().toISOString(),
+    trackingTagsCount: payload.trackingTagsCount || {}
+  });
+  res.status(201).json({ ok: true, total: trackingEvents.length });
+});
+app.use('/tracking-tags', trackingRouter);
+
 const translations = {
   es: {
     APP_TITLE: '✈️ Wishlist',

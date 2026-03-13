@@ -1,4 +1,18 @@
 <div class="app-container">
+  <section style="padding: 12px 16px; border-bottom: 1px solid #ddd;">
+    <div appReconocimiento style="display: none;" aria-hidden="true"></div>
+
+    <button type="button" (click)="toggleReconocimiento()">
+      Alternar directiva Reconocimiento
+    </button>
+
+    @if (showReconocimiento()) {
+      <div appReconocimiento style="margin-top: 8px;">
+        Elemento con la directiva appReconocimiento activa.
+      </div>
+    }
+  </section>
+
   <header class="app-header">
     <div class="header-content">
       <div class="logo-section">

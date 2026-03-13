@@ -11,13 +11,15 @@ export interface DestinosViajesState {  // Interfaz que define el estado de dest
   items: DestinoViaje[]; // Lista de destinos de viaje
   loading: boolean;  // Indica si se están cargando los destinos
   favorito: DestinoViaje | null;  // Destino de viaje favorito seleccionado
+  trackingTagsCount: Record<string, number>;  // Conteo de clics por tracking tag
 }
 
 export const initializeDestinosViajeState = function() {  // Función para inicializar el estado de destinos de viaje
   return {
     items: [],  // Lista inicial vacía de destinos de viaje
     loading: false,  // No se están cargando destinos inicialmente
-    favorito: null  // No hay un destino favorito seleccionado inicialmente
+    favorito: null,  // No hay un destino favorito seleccionado inicialmente
+    trackingTagsCount: {}  // No hay tracking tags registrados inicialmente
   };
 };
 
@@ -31,6 +33,7 @@ export enum DestinosViajesActionTypes {  // Enum que define los tipos de accione
   RESET_VOTOS = '[Destinos Viajes] Reset Votos',  // Acción para reiniciar todos los votos a 0
   INIT_MY_DATA = '[Destinos Viajes] Init My Data',  // Acción para inicializar datos desde API
   INIT_FROM_DEXIE = '[Destinos Viajes] Init From Dexie',  // Acción para inicializar datos desde IndexedDB
+  TRACK_CLICK = '[Destinos Viajes] Track Click', // Acción para registrar clic por tracking tag
 };
 
 export class NuevoDestinoAction implements Action {  // Clase que representa la acción de agregar un nuevo destino de viaje
@@ -72,7 +75,12 @@ export class InitFromDexieAction implements Action {
   constructor(public destinos: DestinoViaje[]) {}
 };
 
-export type DestinosViajesActions = NuevoDestinoAction | ElegidoFavoritoAction | BorrarDestinoAction | VotoArribaAction | VotoAbajoAction | ResetVotosAction | InitMyDataAction | InitFromDexieAction;
+export class TrackClickAction implements Action {
+  type = DestinosViajesActionTypes.TRACK_CLICK;
+  constructor(public tag: string) {}
+};
+
+export type DestinosViajesActions = NuevoDestinoAction | ElegidoFavoritoAction | BorrarDestinoAction | VotoArribaAction | VotoAbajoAction | ResetVotosAction | InitMyDataAction | InitFromDexieAction | TrackClickAction;
 
 // Reducer
 
@@ -144,6 +152,17 @@ export function reducerDestinosViajes (
       return {
         ...state,
         items: (action as InitFromDexieAction).destinos
+      };
+    }
+    case DestinosViajesActionTypes.TRACK_CLICK: {
+      const tag = (action as TrackClickAction).tag;
+      const currentCount = state.trackingTagsCount[tag] ?? 0;
+      return {
+        ...state,
+        trackingTagsCount: {
+          ...state.trackingTagsCount,
+          [tag]: currentCount + 1
+        }
       };
     }
   }

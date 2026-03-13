@@ -8,6 +8,13 @@ export interface ReservasConfig {
 
 export const RESERVAS_CONFIG = new InjectionToken<ReservasConfig>('reservas.config');
 
+// Contrato para demostrar useClass con un tipo abstracto (vía InjectionToken)
+export interface ReservasApiPort {
+  getAll(): ReservaApi[];
+}
+
+export const RESERVAS_API_PORT = new InjectionToken<ReservasApiPort>('reservas.api.port');
+
 export const RESERVAS_CONFIG_VALUE: ReservasConfig = {
   apiEndpoint: 'https://api.reservas.com',
   timeout: 5000
@@ -76,6 +83,3 @@ export class ReservasApiClientDecorated extends ReservasApiClient {
     }));
   }
 }
-
-// 3) InjectionToken para el alias (useExisting)
-export const RESERVAS_API_ALIAS = new InjectionToken<ReservasApiClient>('reservas.api.alias');

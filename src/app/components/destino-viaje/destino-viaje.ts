@@ -6,12 +6,13 @@ import { DestinoViaje as DestinoViajeModel } from '../../models/destino-viaje.mo
 import { RouterLink } from "@angular/router";
 import { AppState } from '../../app';
 import { VotoArribaAction, VotoAbajoAction } from '../../models/destinos-viajes-state.model';
+import { TrackearClick } from '../../trackear-click';
 
 @Component({
   selector: 'app-destino-viaje',
   templateUrl: './destino-viaje.html',
   styleUrl: './destino-viaje.scss',
-  imports: [RouterLink, CommonModule],
+  imports: [RouterLink, CommonModule, TrackearClick],
   standalone: true,
   animations: [
     // Trigger 1: cambia el estilo visual según el estado isSelected

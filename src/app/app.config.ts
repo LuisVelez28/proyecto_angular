@@ -8,6 +8,7 @@ import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideEffects } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
+import { init_tracking_tags_logger, TrackingTagsLoggerService } from './services/tracking-tags-logger.service';
 
 import { routes } from './app.routes';
 import { DestinoViajeApiClient } from './models/destino-api-client.model';
@@ -15,7 +16,7 @@ import { DestinosViajesState, reducerDestinosViajes, DestinosViajesEffects, AppL
 import {
   RESERVAS_CONFIG,
   RESERVAS_CONFIG_VALUE,
-  RESERVAS_API_ALIAS,
+  RESERVAS_API_PORT,
   ReservasApiClient,
   ReservasApiClientDecorated
 } from './reservas/reservas-api-client';
@@ -48,12 +49,15 @@ export const appConfig: ApplicationConfig = {
     provideStoreDevtools({ maxAge: 25, logOnly: false, autoPause: true }),
     DestinoViajeApiClient,
     AppLoadService,
+    TrackingTagsLoggerService,
     { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppLoadService], multi: true },
+    { provide: APP_INITIALIZER, useFactory: init_tracking_tags_logger, deps: [TrackingTagsLoggerService], multi: true },
 
     // Providers globales de reservas
     { provide: RESERVAS_CONFIG, useValue: RESERVAS_CONFIG_VALUE },
+    { provide: RESERVAS_API_PORT, useClass: ReservasApiClientDecorated },
     { provide: ReservasApiClient, useClass: ReservasApiClientDecorated },
-    { provide: RESERVAS_API_ALIAS, useExisting: ReservasApiClient },
+    { provide: ReservasApiClientDecorated, useExisting: ReservasApiClient },
     provideTranslateService({
       defaultLanguage: 'es',
       loader: {
